@@ -7,6 +7,7 @@ saved model is in raw units: estimatePrice(mileage) = theta0 + theta1 * mileage.
 Only +, -, *, / are used (no polyfit / ML lib), per the subject.
 """
 import csv
+import math
 import sys
 
 THETAS_FILE = 'thetas.csv'
@@ -23,8 +24,14 @@ def load_data(path):
 
 def train(xs, ys, lr=0.1, iters=2000):
     m = len(xs)
+    if m < 2:
+        raise ValueError('need at least 2 rows')
+    if not all(math.isfinite(v) for v in xs + ys):
+        raise ValueError('nan or inf value')
     mean = sum(xs) / m
     std = (sum((x - mean) ** 2 for x in xs) / m) ** 0.5
+    if std == 0:
+        raise ValueError('all mileages are equal, no slope to learn')
     xn = [(x - mean) / std for x in xs]           # standardised feature
 
     t0 = t1 = 0.0
@@ -47,8 +54,15 @@ def save_thetas(theta0, theta1, path=THETAS_FILE):
 
 def main():
     path = sys.argv[1] if len(sys.argv) > 1 else 'data.csv'
-    xs, ys = load_data(path)
-    theta0, theta1 = train(xs, ys)
+    try:
+        xs, ys = load_data(path)
+        theta0, theta1 = train(xs, ys)
+    except OSError as e:
+        sys.exit(f'Error: cannot read {path}: {e.strerror}')
+    except KeyError as e:
+        sys.exit(f'Error: {path} has no {e} column')
+    except (ValueError, TypeError) as e:
+        sys.exit(f'Error: bad data in {path}: {e}')
     save_thetas(theta0, theta1)
     print(f'Trained on {len(xs)} rows -> theta0 = {theta0:.6f}, theta1 = {theta1:.6f}')
     print(f'Saved to {THETAS_FILE}')

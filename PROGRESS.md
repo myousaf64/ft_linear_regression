@@ -13,6 +13,10 @@ Converged fit: theta0 ≈ 8499.60, theta1 ≈ -0.021449 (canonical result).
 
 **Run:** `python3 train.py` then `python3 predict.py`. Pure stdlib, no ML lib.
 
-## Next (bonus, only if mandatory stays perfect)
-- Plot data + regression line (needs matplotlib)
-- Precision program (R² / MSE report)
+## Bonus - DONE
+- `plot.py` — data + regression line (matplotlib), saves `plot.png`.
+- `precision.py` — MSE, RMSE, MAE, R² (R² ≈ 0.733 on data.csv).
+
+## Hardening
+- `predict.py` rejects negative, nan, inf mileage; corrupt `thetas.csv` gives a clean error.
+- `train.py` gives a clean error on missing file, missing column, bad value, <2 rows, equal mileages.
