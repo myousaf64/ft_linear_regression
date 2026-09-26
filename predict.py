@@ -4,6 +4,7 @@
 Before training (no thetas file), theta0 and theta1 are 0, so it predicts 0.
 """
 import csv
+import math
 import sys
 
 THETAS_FILE = 'thetas.csv'
@@ -16,6 +17,8 @@ def load_thetas(path=THETAS_FILE):
             return float(t0), float(t1)
     except (FileNotFoundError, StopIteration):
         return 0.0, 0.0
+    except ValueError:
+        sys.exit(f'Error: {path} is corrupt. Run train.py again.')
 
 
 def estimate(mileage, theta0, theta1):
@@ -27,7 +30,9 @@ def main():
     try:
         mileage = float(input('Enter a mileage (km): '))
     except (ValueError, EOFError):
-        print('Please enter a valid number.')
+        mileage = -1.0
+    if not math.isfinite(mileage) or mileage < 0:
+        print('Please enter a valid mileage (a number >= 0).')
         sys.exit(1)
     price = estimate(mileage, theta0, theta1)
     print(f'Estimated price: {max(price, 0):.2f}')
