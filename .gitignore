@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 thetas.csv
 plot.png
+AGENTS.md
+CLAUDE.md
+docs/
+
