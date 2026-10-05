@@ -37,4 +37,3 @@ bad training data raises an error.
 - Training standardises mileage, then folds the scaling back so the saved thetas
   are in raw units.
 - Converged fit: theta0 about 8499.60, theta1 about -0.021449.
-- `PROGRESS.md` is the development log.
